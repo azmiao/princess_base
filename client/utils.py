@@ -9,8 +9,8 @@ import zhconv
 from yuiChyan import CQEvent, CommandErrorException, InterFunctionException
 from yuiChyan.config import PROXY
 from yuiChyan.http_request import get_session_or_create
-from yuiChyan.core.princess.client.game_client import PcrClient
-from yuiChyan.core.princess.client.parse_client import ParseClient
+from .game_client import PcrClient
+from .parse_client import ParseClient
 from .player_pref import decrypt_xml
 
 # 当前目录
