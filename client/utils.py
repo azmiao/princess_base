@@ -166,9 +166,9 @@ async def update_client(version: str):
         json.dump(header_config, _f, indent=4, ensure_ascii=False)
     # 然后去更新缓存的客户端版本
     global user_client_cache, admin_client_cache
-    if not user_client_cache:
+    if user_client_cache:
         user_client_cache.update_version(version)
-    if not admin_client_cache:
+    if admin_client_cache:
         admin_client_cache.update_version(version)
 
 
