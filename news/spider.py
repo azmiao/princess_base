@@ -68,8 +68,12 @@ class TwSpider(BaseSpider):
 
 
 class BiliSpider(BaseSpider):
-    url = "http://api.biligame.com/news/list?gameExtensionId=267&positionId=2&pageNum=1&pageSize=7&typeId="
+    url = "http://api.biligame.com/news/list?gameExtensionId=267&positionId=2&pageNum=1&pageSize=7"
     src_name = "国服官网"
+    header = {
+        "Host": "api.biligame.com",
+        "Accept": "application/json"
+    }
 
     @staticmethod
     async def get_items(resp):
