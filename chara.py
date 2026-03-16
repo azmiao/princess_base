@@ -98,13 +98,13 @@ def get_chara_by_id(id_: int, star: int = 0, equip: int = 0, second_equip: int =
     return Chara(id_, star, equip, second_equip)
 
 
-# 下载头像 | 返回值：0正常，1不存在，2失败，3出错
+# 下载头像 | 返回值：-1已下载，0正常，1不存在，2失败，3出错
 async def download_chara_icon(session: AsyncClient, id_: int, star: int) -> int:
     url = f'https://redive.estertion.win/icon/unit/{id_}{star}1.webp'
     save_path = os.path.join(unit_path, f'icon_unit_{id_}{star}1.png')
     if os.path.exists(save_path):
-        sv.logger.info(f'> 角色角色 [{id_}] 头像已存在，将跳过')
-        return 0
+        sv.logger.info(f'> 角色角色 [{id_}] 头像已下载，将跳过')
+        return -1
     sv.logger.info(f'> 开始下载PCR角色 [{id_}] URL={url}')
     try:
         async with session.stream('GET', url, timeout=5) as rsp:
@@ -128,7 +128,11 @@ async def download_chara_icon(session: AsyncClient, id_: int, star: int) -> int:
 @sv.on_command(('PCR更新所有头像', 'pcr更新所有头像'), cmd_permission=SUPERUSER)
 async def download_all_chara_icon(bot, ev):
     try:
+        exists = 0
         success = 0
+        non_existent = 0
+        failed = 0
+        error = 0
         all_sum = 0
         for id_ in chara_manager.CHARA_NAME:
             if is_npc(id_):
@@ -141,9 +145,13 @@ async def download_all_chara_icon(bot, ev):
                 download_chara_icon(session, id_, 1),
             )
             await close_async_session('PcrUnitUpdate', session)
+            exists += sum(r == -1 for r in ret)
             success += sum(r == 0 for r in ret)
+            non_existent += sum(r == 1 for r in ret)
+            failed += sum(r == 2 for r in ret)
+            error += sum(r == 3 for r in ret)
             all_sum += len(ret)
-        await bot.send(ev, f'> PCR头像更新完成! \n下载成功 {success}/{all_sum} 个头像')
+        await bot.send(ev, f'> PCR头像共 {all_sum} 个已更新完成! \n已存在：{exists}\n下载成功：{success}\n不存在：{non_existent}\n失败：{failed}\n出错：{error}')
     except Exception as e:
         raise FunctionException(ev, f'> PCR头像更新出错: {type(e)}，{str(e)}')
 
