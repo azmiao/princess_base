@@ -102,6 +102,9 @@ def get_chara_by_id(id_: int, star: int = 0, equip: int = 0, second_equip: int =
 async def download_chara_icon(session: AsyncClient, id_: int, star: int) -> int:
     url = f'https://redive.estertion.win/icon/unit/{id_}{star}1.webp'
     save_path = os.path.join(unit_path, f'icon_unit_{id_}{star}1.png')
+    if os.path.exists(save_path):
+        sv.logger.info(f'> 角色角色 [{id_}] 头像已存在，将跳过')
+        return 0
     sv.logger.info(f'> 开始下载PCR角色 [{id_}] URL={url}')
     try:
         async with session.stream('GET', url, timeout=5) as rsp:
@@ -111,7 +114,7 @@ async def download_chara_icon(session: AsyncClient, id_: int, star: int) -> int:
                 sv.logger.info(f'- 已保存至 [{save_path}]')
                 return 0
             elif 404 == rsp.status_code:
-                sv.logger.info(f'- 角色头像 [{id_}{star}1] 不存在，将跳过')
+                sv.logger.info(f'- 角色头像 [{id_}{star}1] 请求404，将跳过')
                 return 1
             else:
                 sv.logger.info(f'- 角色头像 [{id_}{star}1] 下载失败：CODE={rsp.status_code}')
