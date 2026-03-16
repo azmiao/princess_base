@@ -21,7 +21,9 @@ class Item:
 class BaseSpider(abc.ABC):
     url = None
     src_name = None
-    header = {}
+    header = {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    }
     idx_cache = set()
     item_cache = []
 
@@ -71,6 +73,7 @@ class BiliSpider(BaseSpider):
     url = "http://api.biligame.com/news/list?gameExtensionId=267&positionId=2&pageNum=1&pageSize=7"
     src_name = "国服官网"
     header = {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0",
         "Host": "api.biligame.com",
         "Accept": "application/json"
     }
