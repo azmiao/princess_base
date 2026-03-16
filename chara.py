@@ -103,7 +103,7 @@ async def download_chara_icon(session: AsyncClient, id_: int, star: int) -> int:
     url = f'https://redive.estertion.win/icon/unit/{id_}{star}1.webp'
     save_path = os.path.join(unit_path, f'icon_unit_{id_}{star}1.png')
     if os.path.exists(save_path):
-        sv.logger.info(f'> 角色角色 [{id_}] 头像已下载，将跳过')
+        sv.logger.info(f'> 角色角色 [{id_}{star}1] 头像已下载，将跳过')
         return -1
     sv.logger.info(f'> 开始下载PCR角色 [{id_}] URL={url}')
     try:
